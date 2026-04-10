@@ -1,55 +1,98 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-import { query } from "./db.js";
-
-dotenv.config();
+const express = require('express');
+const path = require('path');
+const pool = require('./db');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "public")));
-
-// Health check
-app.get("/api/health", (req, res) => res.json({ ok: true }));
-
-// Create record (SAVE)
-app.post("/api/records", async (req, res) => {
+// Get all failures
+app.get('/api/failures', async (req, res) => {
   try {
-    const { name, description } = req.body;
-    if (!name || !description) {
-      return res.status(400).json({ error: "name and description are required" });
-    }
+    const result = await pool.query(`
+      SELECT *
+      FROM failures
+      ORDER BY created_at DESC
+    `);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('GET /api/failures error:', error);
+    res.status(500).json({ error: 'Failed to fetch failures' });
+  }
+});
 
-    const result = await query(
-      `INSERT INTO records (name, description) VALUES ($1, $2) RETURNING *`,
-      [name, description]
+// Save a failure
+app.post('/api/failures', async (req, res) => {
+  try {
+    const {
+      line,
+      station,
+      machine,
+      model,
+      part_no,
+      failure_code,
+      failure_title,
+      symptom,
+      root_cause,
+      action_taken,
+      owner_name,
+      status,
+      extra_fields
+    } = req.body;
+
+    const result = await pool.query(
+      `
+      INSERT INTO failures (
+        line, station, machine, model, part_no,
+        failure_code, failure_title, symptom, root_cause,
+        action_taken, owner_name, status, extra_fields
+      )
+      VALUES (
+        $1,$2,$3,$4,$5,
+        $6,$7,$8,$9,
+        $10,$11,$12,$13
+      )
+      RETURNING *
+      `,
+      [
+        line || null,
+        station || null,
+        machine || null,
+        model || null,
+        part_no || null,
+        failure_code || null,
+        failure_title || null,
+        symptom || null,
+        root_cause || null,
+        action_taken || null,
+        owner_name || null,
+        status || 'Open',
+        extra_fields || {}
+      ]
     );
 
     res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+  } catch (error) {
+    console.error('POST /api/failures error:', error);
+    res.status(500).json({ error: 'Failed to save failure' });
   }
 });
 
-// Read records (FETCH)
-app.get("/api/records", async (req, res) => {
+// Delete a failure
+app.delete('/api/failures/:id', async (req, res) => {
   try {
-    const result = await query(`SELECT * FROM records ORDER BY created_at DESC`);
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    const { id } = req.params;
+    await pool.query('DELETE FROM failures WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('DELETE /api/failures/:id error:', error);
+    res.status(500).json({ error: 'Failed to delete failure' });
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

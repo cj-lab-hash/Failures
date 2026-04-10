@@ -1,43 +1,190 @@
-async function loadRecords() {
-  const res = await fetch("/api/records");
-  const data = await res.json();
-  const list = document.getElementById("list");
+const failureForm = document.getElementById('failureForm');
+const customFieldsContainer = document.getElementById('customFields');
+const addFieldBtn = document.getElementById('addFieldBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const tableHead = document.querySelector('#failureTable thead');
+const tableBody = document.querySelector('#failureTable tbody');
 
-  list.innerHTML = data.map(r => `
-    <div class="card">
-      <b>${escapeHtml(r.name)}</b><br/>
-      <div>${escapeHtml(r.description)}</div>
-      <small>${new Date(r.created_at).toLocaleString()}</small>
-    </div>
-  `).join("");
-}
+const fixedColumns = [
+  'id',
+  'line',
+  'station',
+  'machine',
+  'model',
+  'part_no',
+  'failure_code',
+  'failure_title',
+  'symptom',
+  'root_cause',
+  'action_taken',
+  'owner_name',
+  'status',
+  'created_at'
+];
 
-document.getElementById("recordForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+function addCustomFieldRow(key = '', value = '') {
+  const row = document.createElement('div');
+  row.className = 'custom-row';
 
-  const name = document.getElementById("name").value.trim();
-  const description = document.getElementById("description").value.trim();
+  row.innerHTML = `
+    <input type="text" class="custom-key" placeholder="Field name" value="${key}" />
+    <input type="text" class="custom-value" placeholder="Field value" value="${value}" />
+    <button type="button" class="btn btn-danger remove-field">Remove</button>
+  `;
 
-  const res = await fetch("/api/records", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, description })
+  row.querySelector('.remove-field').addEventListener('click', () => {
+    row.remove();
   });
 
-  if (!res.ok) {
-    alert("Failed to save record");
+  customFieldsContainer.appendChild(row);
+}
+
+function collectCustomFields() {
+  const rows = customFieldsContainer.querySelectorAll('.custom-row');
+  const extraFields = {};
+
+  rows.forEach((row) => {
+    const key = row.querySelector('.custom-key').value.trim();
+    const value = row.querySelector('.custom-value').value.trim();
+
+    if (key) {
+      extraFields[key] = value;
+    }
+  });
+
+  return extraFields;
+}
+
+async function saveFailure(event) {
+  event.preventDefault();
+
+  const formData = new FormData(failureForm);
+  const payload = Object.fromEntries(formData.entries());
+  payload.extra_fields = collectCustomFields();
+
+  try {
+    const response = await fetch('/api/failures', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to save record');
+    }
+
+    failureForm.reset();
+    customFieldsContainer.innerHTML = '';
+    await loadFailures();
+    alert('Record saved successfully.');
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}
+
+function buildColumns(records) {
+  const extraColumns = new Set();
+
+  records.forEach((record) => {
+    const extras = record.extra_fields || {};
+    Object.keys(extras).forEach((key) => extraColumns.add(key));
+  });
+
+  return [...fixedColumns, ...extraColumns, 'actions'];
+}
+
+function formatValue(value) {
+  if (value === null || value === undefined || value === '') return '-';
+  return value;
+}
+
+function renderTable(records) {
+  const columns = buildColumns(records);
+
+  tableHead.innerHTML = `
+    <tr>
+      ${columns.map((col) => `<th>${col.replaceAll('_', ' ')}</th>`).join('')}
+    </tr>
+  `;
+
+  if (!records.length) {
+    tableBody.innerHTML = `
+      <tr>
+        <td class="empty" colspan="${columns.length}">No saved records yet.</td>
+      </tr>
+    `;
     return;
   }
 
-  document.getElementById("name").value = "";
-  document.getElementById("description").value = "";
-  await loadRecords();
-});
+  tableBody.innerHTML = records.map((record) => {
+    const extras = record.extra_fields || {};
 
-function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-  }[m]));
+    const cells = columns.map((col) => {
+      if (col === 'actions') {
+        return `
+          <td>
+            <button class="btn btn-danger" onclick="deleteFailure(${record.id})">Delete</button>
+          </td>
+        `;
+      }
+
+      if (fixedColumns.includes(col)) {
+        let value = record[col];
+
+        if (col === 'created_at' && value) {
+          value = new Date(value).toLocaleString();
+        }
+
+        return `<td>${formatValue(value)}</td>`;
+      }
+
+      return `<td>${formatValue(extras[col])}</td>`;
+    });
+
+    return `<tr>${cells.join('')}</tr>`;
+  }).join('');
 }
 
-loadRecords();
+async function loadFailures() {
+  try {
+    const response = await fetch('/api/failures');
+    const records = await response.json();
+    renderTable(records);
+  } catch (error) {
+    console.error(error);
+    tableBody.innerHTML = `
+      <tr>
+        <td class="empty" colspan="99">Failed to load data.</td>
+      </tr>
+    `;
+  }
+}
+
+async function deleteFailure(id) {
+  const confirmed = confirm('Delete this record?');
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(`/api/failures/${id}`, { method: 'DELETE' });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to delete record');
+    }
+
+    await loadFailures();
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}
+
+addFieldBtn.addEventListener('click', () => addCustomFieldRow());
+refreshBtn.addEventListener('click', loadFailures);
+failureForm.addEventListener('submit', saveFailure);
+
+loadFailures();
+``

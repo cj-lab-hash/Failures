@@ -1,29 +1,122 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KVF</title>
-  <style>
-    body { font-family: Arial; max-width: 500px; margin: 40px auto; padding: 0 16px; }
-    form { display: grid; gap: 2px; margin-bottom: 10px; }
-    input, textarea, button { padding: 8px; font-size: 12px; }
-    .card { border: 1px solid #ddd; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
-    small { color: #666; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Known Valid Failures</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>KNOW VALID FAILURES</h1>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Failure Tracking System</p>
+        <h1>Known Valid Failures</h1>
+        <p class="subtitle">Log, manage, and view valid failure records in one clean dashboard.</p>
+      </div>
+      <button id="refreshBtn" class="btn btn-secondary">Refresh Table</button>
+    </header>
 
-  <form id="recordForm">
-    <input id="deviceName" placeholder="Device Name" required />
-    <textarea id="failure" placeholder="Failure" required></textarea>
-    <textarea id="binFailure" placeholder="Bin Failure" required></textarea>
-    <button type="submit">Save</button>
-  </form>
+    <section class="card">
+      <div class="card-header">
+        <h2>Create New Failure Record</h2>
+        <p>Use the main fields below, then add any extra custom fields if needed.</p>
+      </div>
 
-  <h2>Saved Records</h2>
-  <div id="list"></div>
+      <form id="failureForm" class="form-grid">
+        <div class="field">
+          <label>Line</label>
+          <input type="text" name="line" placeholder="e.g. ACT CELL 1" />
+        </div>
+
+        <div class="field">
+          <label>Station</label>
+          <input type="text" name="station" placeholder="e.g. FCT" />
+        </div>
+
+        <div class="field">
+          <label>Machine</label>
+          <input type="text" name="machine" placeholder="Machine name" />
+        </div>
+
+        <div class="field">
+          <label>Model</label>
+          <input type="text" name="model" placeholder="Model" />
+        </div>
+
+        <div class="field">
+          <label>Part No</label>
+          <input type="text" name="part_no" placeholder="Part number" />
+        </div>
+
+        <div class="field">
+          <label>Failure Code</label>
+          <input type="text" name="failure_code" placeholder="Code" />
+        </div>
+
+        <div class="field field-span-2">
+          <label>Failure Title</label>
+          <input type="text" name="failure_title" placeholder="Short failure title" required />
+        </div>
+
+        <div class="field field-span-2">
+          <label>Symptom</label>
+          <textarea name="symptom" rows="3" placeholder="Observed issue"></textarea>
+        </div>
+
+        <div class="field field-span-2">
+          <label>Root Cause</label>
+          <textarea name="root_cause" rows="3" placeholder="Possible or confirmed root cause"></textarea>
+        </div>
+
+        <div class="field field-span-2">
+          <label>Action Taken</label>
+          <textarea name="action_taken" rows="3" placeholder="Containment / corrective action"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Owner</label>
+          <input type="text" name="owner_name" placeholder="Assigned owner" />
+        </div>
+
+        <div class="field">
+          <label>Status</label>
+          <select name="status">
+            <option value="Open">Open</option>
+            <option value="Monitoring">Monitoring</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
+        <div class="field field-span-2">
+          <div class="custom-header">
+            <label>Custom Fields</label>
+            <button type="button" id="addFieldBtn" class="btn btn-secondary">+ Add Field</button>
+          </div>
+          <div id="customFields"></div>
+        </div>
+
+        <div class="form-actions field-span-2">
+          <button type="submit" class="btn btn-primary">Save Record</button>
+          <button type="reset" class="btn btn-secondary">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Saved Failure Records</h2>
+        <p>The table below is generated automatically from PostgreSQL data.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table id="failureTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
 
   <script src="app.js"></script>
 </body>

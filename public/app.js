@@ -11,19 +11,33 @@ let deleteUnlocked = false;
 let deletePassword = '';
 
 const fixedColumns = [
-  'Id',
-  'Line',
-  'Part No',
-  'Bin Number',
-  'Failure Title',
-  'Symptom',
-  'Root Cause',
-  'Action Taken',
-  'Owner',
-  'Status',
-  'Created At'
+  'id',
+  'line',
+  'part_no',
+  'bin_number',
+  'failure_title',
+  'symptom',
+  'root_cause',
+  'action_taken',
+  'owner_name',
+  'status',
+  'created_at'
 ];
 
+const columnLabels = {
+  id: 'Id',
+  line: 'Line',
+  part_no: 'Part No',
+  bin_number: 'Bin Number',
+  failure_title: 'Failure Title',
+  symptom: 'Symptom',
+  root_cause: 'Root Cause',
+  action_taken: 'Action Taken',
+  owner_name: 'Owner',
+  status: 'Status',
+  created_at: 'Created At',
+  actions: 'Actions'
+};
 
 function addCustomFieldRow(key = '', value = '') {
   const row = document.createElement('div');
@@ -108,9 +122,9 @@ function renderTable(records) {
   const columns = buildColumns(records);
 
   tableHead.innerHTML = `
-    <tr>
-      ${columns.map((col) => `<th>${col.replaceAll('_', ' ')}</th>`).join('')}
-    </tr>
+  <tr>
+    ${columns.map((col) => `<th>${columnLabels[col] || col}</th>`).join('')}
+  </tr>
   `;
 
   if (!records.length) {

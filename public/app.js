@@ -11,17 +11,17 @@ let deleteUnlocked = false;
 let deletePassword = '';
 
 const fixedColumns = [
-  'id',
-  'line',
-  'part_no',
-  'bin_number',
-  'failure_title',
-  'symptom',
-  'root_cause',
-  'action_taken',
-  'owner_name',
-  'status',
-  'created_at'
+  'Id',
+  'Line',
+  'Part No',
+  'Bin Number',
+  'Failure Title',
+  'Symptom',
+  'Root Cause',
+  'Action Taken',
+  'Owner',
+  'Status',
+  'Created At'
 ];
 
 

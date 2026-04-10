@@ -29,11 +29,8 @@ app.post('/api/failures', async (req, res) => {
   try {
     const {
       line,
-      station,
-      machine,
-      model,
       part_no,
-      failure_code,
+      bin_number,
       failure_title,
       symptom,
       root_cause,
@@ -46,24 +43,24 @@ app.post('/api/failures', async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO failures (
-        line, station, machine, model, part_no,
-        failure_code, failure_title, symptom, root_cause,
-        action_taken, owner_name, status, extra_fields
+        line,
+        part_no,
+        bin_number,
+        failure_title,
+        symptom,
+        root_cause,
+        action_taken,
+        owner_name,
+        status,
+        extra_fields
       )
-      VALUES (
-        $1,$2,$3,$4,$5,
-        $6,$7,$8,$9,
-        $10,$11,$12,$13
-      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
       RETURNING *
       `,
       [
         line || null,
-        station || null,
-        machine || null,
-        model || null,
         part_no || null,
-        failure_code || null,
+        bin_number || null,
         failure_title || null,
         symptom || null,
         root_cause || null,

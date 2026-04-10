@@ -8,9 +8,6 @@ const tableBody = document.querySelector('#failureTable tbody');
 const fixedColumns = [
   'id',
   'line',
-  'station',
-  'machine',
-  'model',
   'part_no',
   'bin_number',
   'failure_title',
@@ -21,6 +18,7 @@ const fixedColumns = [
   'status',
   'created_at'
 ];
+
 
 function addCustomFieldRow(key = '', value = '') {
   const row = document.createElement('div');

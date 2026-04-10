@@ -12,7 +12,7 @@ const fixedColumns = [
   'machine',
   'model',
   'part_no',
-  'failure_code',
+  'bin_number',
   'failure_title',
   'symptom',
   'root_cause',

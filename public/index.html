@@ -93,6 +93,12 @@
         <h2>Saved Failure Records</h2>
         <p>The table below is generated automatically from PostgreSQL data.</p>
       </div>
+        <div class="delete-protection">
+        <button type="button" id="unlockDeleteBtn" class="btn btn-secondary">
+          Unlock Delete
+        </button>
+       <span id="deleteStatus" class="delete-status">Delete is locked</span>
+        </div>
 
       <div class="table-wrap">
         <table id="failureTable">

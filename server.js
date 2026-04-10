@@ -82,11 +82,18 @@ app.post('/api/failures', async (req, res) => {
 app.delete('/api/failures/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    const { password } = req.body;
+
+    if (!password || password !== process.env.DELETE_PASSWORD) {
+      return res.status(403).json({ error: 'Invalid delete password' });
+    }
+
     await pool.query('DELETE FROM failures WHERE id = $1', [id]);
+
     res.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/failures/:id error:', error);
-    res.status(500).json({ error: 'Failed to delete failure' });
+    res.status(500).json({ error: 'Failed to delete record' });
   }
 });
 

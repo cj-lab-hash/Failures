@@ -226,3 +226,21 @@ tr:hover td {
     flex-direction: column;
   }
 }
+.delete-protection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.delete-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.btn-disabled,
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

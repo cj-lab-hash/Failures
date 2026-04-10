@@ -4,6 +4,11 @@ const addFieldBtn = document.getElementById('addFieldBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const tableHead = document.querySelector('#failureTable thead');
 const tableBody = document.querySelector('#failureTable tbody');
+const unlockDeleteBtn = document.getElementById('unlockDeleteBtn');
+const deleteStatus = document.getElementById('deleteStatus');
+
+let deleteUnlocked = false;
+let deletePassword = '';
 
 const fixedColumns = [
   'id',
@@ -121,13 +126,20 @@ function renderTable(records) {
     const extras = record.extra_fields || {};
 
     const cells = columns.map((col) => {
-      if (col === 'actions') {
-        return `
-          <td>
-            <button class="btn btn-danger" onclick="deleteFailure(${record.id})">Delete</button>
-          </td>
-        `;
-      }
+          if (col === 'actions') {
+           return `
+           <td>
+            <button
+                  class="btn btn-danger"
+                 onclick="deleteFailure(${record.id})"
+                  ${deleteUnlocked ? '' : 'disabled'}
+                 >
+                Delete
+              </button>
+             </td>
+             `;
+            }
+
 
       if (fixedColumns.includes(col)) {
         let value = record[col];
@@ -161,12 +173,26 @@ async function loadFailures() {
   }
 }
 
-async function deleteFailure(id) {
+aasync function deleteFailure(id) {
+  if (!deleteUnlocked) {
+    alert('Delete is locked. Please unlock first.');
+    return;
+  }
+
   const confirmed = confirm('Delete this record?');
   if (!confirmed) return;
 
   try {
-    const response = await fetch(`/api/failures/${id}`, { method: 'DELETE' });
+    const response = await fetch(`/api/failures/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        password: deletePassword
+      })
+    });
+
     const result = await response.json();
 
     if (!response.ok) {
@@ -174,6 +200,7 @@ async function deleteFailure(id) {
     }
 
     await loadFailures();
+    alert('Record deleted successfully.');
   } catch (error) {
     console.error(error);
     alert(error.message);
@@ -185,4 +212,18 @@ refreshBtn.addEventListener('click', loadFailures);
 failureForm.addEventListener('submit', saveFailure);
 
 loadFailures();
-``
+//delete button protection//
+unlockDeleteBtn.addEventListener('click', () => {
+  const input = prompt('Enter delete password:');
+
+  if (!input) return;
+
+  deletePassword = input.trim();
+
+  if (deletePassword) {
+    deleteUnlocked = true;
+    deleteStatus.textContent = 'Delete is unlocked';
+    deleteStatus.style.color = 'green';
+    loadFailures();
+  }
+});

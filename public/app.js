@@ -173,7 +173,7 @@ async function loadFailures() {
   }
 }
 
-aasync function deleteFailure(id) {
+async function deleteFailure(id) {
   if (!deleteUnlocked) {
     alert('Delete is locked. Please unlock first.');
     return;

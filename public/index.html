@@ -3,21 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My New Website</title>
+  <title>KVF</title>
   <style>
-    body { font-family: Arial; max-width: 900px; margin: 40px auto; padding: 0 16px; }
-    form { display: grid; gap: 10px; margin-bottom: 20px; }
-    input, textarea, button { padding: 10px; font-size: 16px; }
+    body { font-family: Arial; max-width: 500px; margin: 40px auto; padding: 0 16px; }
+    form { display: grid; gap: 2px; margin-bottom: 10px; }
+    input, textarea, button { padding: 8px; font-size: 12px; }
     .card { border: 1px solid #ddd; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
     small { color: #666; }
   </style>
 </head>
 <body>
-  <h1>New Website (Save Data)</h1>
+  <h1>KNOW VALID FAILURES</h1>
 
   <form id="recordForm">
-    <input id="name" placeholder="Name" required />
-    <textarea id="description" placeholder="Description" required></textarea>
+    <input id="deviceName" placeholder="Device Name" required />
+    <textarea id="failure" placeholder="Failure" required></textarea>
+    <textarea id="binFailure" placeholder="Bin Failure" required></textarea>
     <button type="submit">Save</button>
   </form>
 

@@ -10,27 +10,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-const ALLOWED_SCHEMAS = new Set([
-  'known_valid_failures',
-  'kvf',
-  'manual_actuators',
-  'meralco_app'
-]);
-
-const SCHEMA = process.env.APP_SCHEMA || 'known_valid_failures';
-
-if (!ALLOWED_SCHEMAS.has(SCHEMA)) {
-  throw new Error(`Invalid APP_SCHEMA: ${SCHEMA}`);
-}
-const TABLE = `${SCHEMA}.failures`;
 
 // Get all failures
 app.get('/api/failures', async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT *
-      FROM ${TABLE}
-      ORDER BY created_at DESC
+          FROM failures
+          ORDER BY created_at DESC
     `);
     res.json(result.rows);
   } catch (error) {

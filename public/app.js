@@ -288,3 +288,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchBtn");
+  const table = document.getElementById("failureTable");
+
+  if (!input || !btn || !table) return;
+
+  const filterRows = () => {
+    const query = input.value.trim().toUpperCase();
+    const rows = table.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+      const text = row.textContent.toUpperCase();
+      row.style.display = text.includes(query) ? "" : "none";
+    });
+  };
+
+  // Search on button click
+  btn.addEventListener("click", filterRows);
+
+  // Optional: also search while typing (like many dashboards)
+  input.addEventListener("input", filterRows);
+
+  // Optional: press Enter to search
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") filterRows();
+  });
+});

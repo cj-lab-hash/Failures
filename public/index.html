@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Known Valid Failures</title>
+  <title>KVF</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,8 +14,15 @@
         <h1>Product Information Guide</h1>
         <p class="subtitle">Log, manage, and view valid failure records in one clean dashboard.</p>
       </div>
+      <div clases="btn-group">
       <button id="toggleFormBtn" class="btn btn-secondary" type="button">Add Data</button>
       <button id="refreshBtn" class="btn btn-secondary" type="button">Refresh Table</button>
+          
+        <div class="search-wrap">
+          <input id="searchInput" type="text" class="search-input" placeholder="Search records..." />
+        <button id="searchBtn" class="btn btn-secondary" type="button">Search</button>
+        </div>
+      </div>
     </header>
 
     <div id="kvfFormContainer" class="hidden">
@@ -63,7 +70,7 @@
 
         <div class="field">
           <label>Owner</label>
-          <input type="text" name="owner_name" value="Jovanny Reputana" class="auto-upper" readonly />
+          <input type="text" name="owner_name" value="Jovanny Reputana" class="auto-upper" readonly title="Record owner" />
         </div>
 
         <div class="field">

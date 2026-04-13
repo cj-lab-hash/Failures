@@ -247,3 +247,24 @@ button:disabled {
 .hidden {
   display: none;
 }
+
+.btn-group {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap:wrap; /* prevents overflow on smaller screens */
+}
+
+.search-wrap{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.search-input{
+  width:260px;
+  padding:10px 12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+}

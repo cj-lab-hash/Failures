@@ -14,13 +14,12 @@
         <h1>Product Information Guide</h1>
         <p class="subtitle">Log, manage, and view valid failure records in one clean dashboard.</p>
       </div>
-      <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#failureForm">
-    Add New Failure
-  </button>
+      <button id="toggleBtnForm" class="btn btn secondary">Show Form</button>
       <button id="refreshBtn" class="btn btn-secondary">Refresh Table</button>
     </header>
 
-    <section class="card">
+    <div id="kvfformContainer" class="hidden">
+      <section class="card">
       <div class="card-header">
         <h2>Create New Failure Record</h2>
         <p>Use the main fields below, then add any extra custom fields if needed.</p>
@@ -90,7 +89,7 @@
         </div>
       </form>
     </section>
-
+    </div>
     <section class="card">
       <div class="card-header">
         <h2>Saved Failure Records</h2>

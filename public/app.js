@@ -7,6 +7,7 @@ const tableBody = document.querySelector('#failureTable tbody');
 const unlockDeleteBtn = document.getElementById('unlockDeleteBtn');
 const deleteStatus = document.getElementById('deleteStatus');
 
+
 let deleteUnlocked = false;
 let deletePassword = '';
 
@@ -241,3 +242,22 @@ unlockDeleteBtn.addEventListener('click', () => {
     loadFailures();
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("toggleFormBtn");
+  const formContainer = document.getElementById("kvfFormContainer");
+
+  toggleBtn.addEventListener("click", () => {
+    formContainer.classList.toggle("hidden");
+
+    toggleBtn.textContent = formContainer.classList.contains("hidden")
+      ? "Show Form"
+      : "Hide Form";
+  });
+});
+
+  document.getElementById("kvfForm").addEventListener("submit", () => {
+  document.getElementById("kvfFormContainer").classList.add("hidden");
+  document.getElementById("toggleFormBtn").textContent = "Show Form";
+});
+

@@ -14,7 +14,7 @@
         <h1>Product Information Guide</h1>
         <p class="subtitle">Log, manage, and view valid failure records in one clean dashboard.</p>
       </div>
-      <button id="toggleFormBtn" class="btn btn secondary" type="button">Add Data</button>
+      <button id="toggleFormBtn" class="btn btn-secondary" type="button">Add Data</button>
       <button id="refreshBtn" class="btn btn-secondary" type="button">Refresh Table</button>
     </header>
 
@@ -28,42 +28,42 @@
       <form id="failureForm" class="form-grid">
         <div class="field">
           <label>Line</label>
-          <input type="text" name="line" placeholder="e.g. SZ/TERCAT/QUARTET" />
+          <input type="text" name="line" class="auto-upper" placeholder="e.g. SZ/TERCAT/QUARTET" />
         </div>
         
         <div class="field">
           <label>Part No</label>
-          <input type="text" name="part_no" placeholder="Part number" />
+          <input type="text" name="part_no" class="auto-upper" placeholder="Part number" />
         </div>
 
         <div class="field">
           <label>Bin Number</label>
-          <input type="text" name="bin_number" placeholder="Bin number" />
+          <input type="text" name="bin_number" class="auto-upper" placeholder="Bin number" />
         </div>
 
         <div class="field">
           <label>Failure Name</label>
-          <input type="text" name="failure_title" placeholder="Failure name" required />
+          <input type="text" name="failure_title" class="auto-upper" placeholder="Failure name" required />
         </div>
 
         <div class="field">
           <label>Symptom</label>
-          <textarea name="symptom" rows="3" placeholder="Observed issue"></textarea>
+          <textarea name="symptom" rows="3" class="auto-upper" placeholder="Observed issue"></textarea>
         </div>
 
         <div class="field">
           <label>Root Cause</label>
-          <textarea name="root_cause" rows="3" placeholder="Possible or confirmed root cause"></textarea>
+          <textarea name="root_cause" rows="3" class="auto-upper" placeholder="Possible or confirmed root cause"></textarea>
         </div>
 
         <div class="field">
           <label>Action Taken</label>
-          <textarea name="action_taken" rows="3" placeholder="Containment / corrective action"></textarea>
+          <textarea name="action_taken" rows="3" class="auto-upper" placeholder="Containment / corrective action"></textarea>
         </div>
 
         <div class="field">
           <label>Owner</label>
-          <input type="text" name="owner_name" placeholder="Assigned owner" />
+          <input type="text" name="owner_name" value="Jovanny Reputana" class="auto-upper" readonly />
         </div>
 
         <div class="field">

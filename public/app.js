@@ -271,3 +271,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("failureForm");
+  if (!form) return;
+
+  form.addEventListener("input", (e) => {
+    const el = e.target;
+
+    if (el.matches(".auto-upper")) {
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+
+      el.value = el.value.toUpperCase();
+      el.setSelectionRange(start, end);
+    }
+  });
+});

@@ -56,11 +56,12 @@ app.post('/api/failures', async (req, res) => {
         status,
         extra_fields
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
       RETURNING *
       `,
       [
         line || null,
+        die_type || null,
         part_no || null,
         bin_number || null,
         failure_title || null,
@@ -75,6 +76,8 @@ app.post('/api/failures', async (req, res) => {
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    console.log("REQ BODY:", req.body);
+    console.log("DIE TYPE:", req.body.die_type);
     console.error('POST /api/failures error:', error);
     res.status(500).json({ error: 'Failed to save failure' });
   }

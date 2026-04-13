@@ -246,9 +246,9 @@ unlockDeleteBtn.addEventListener('click', () => {
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById("toggleFormBtn");
   const formContainer = document.getElementById("kvfFormContainer");
-  const form = document.getElementById("failureForm"); // ✅ correct ID
+  const form = document.getElementById("failureForm"); 
 
-  // Safety check (prevents crashes if app.js is used on other pages)
+ 
   if (!toggleBtn || !formContainer) {
     console.warn("toggleFormBtn or kvfFormContainer not found on this page.");
     return;
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : "Hide Form";
   });
 
-  // Hide form after submit (only if the form exists on this page)
+  
   if (form) {
     form.addEventListener("submit", () => {
       formContainer.classList.add("hidden");

@@ -14,6 +14,7 @@ let deletePassword = '';
 const fixedColumns = [
   'id',
   'line',
+  'die_type',
   'part_no',
   'bin_number',
   'failure_title',
@@ -28,6 +29,7 @@ const fixedColumns = [
 const columnLabels = {
   id: 'Id',
   line: 'Line',
+  die_type: 'Die Type',
   part_no: 'Part No',
   bin_number: 'Bin Number',
   failure_title: 'Failure Title',

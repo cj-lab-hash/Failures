@@ -31,6 +31,7 @@ app.post('/api/failures', async (req, res) => {
   try {
     const {
       line,
+      die_type,
       part_no,
       bin_number,
       failure_title,
@@ -46,6 +47,7 @@ app.post('/api/failures', async (req, res) => {
       `
       INSERT INTO failures (
         line,
+        die_type
         part_no,
         bin_number,
         failure_title,

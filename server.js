@@ -47,7 +47,7 @@ app.post('/api/failures', async (req, res) => {
       `
       INSERT INTO failures (
         line,
-        die_type
+        die_type,
         part_no,
         bin_number,
         failure_title,
